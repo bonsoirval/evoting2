@@ -1,0 +1,1 @@
+voter registered successfully
