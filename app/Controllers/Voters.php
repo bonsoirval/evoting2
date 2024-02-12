@@ -12,13 +12,12 @@
         public function voter_dashboard(){
             $model = model('VotersModel');
             $session = session();
-            $elections = $model->get_elections();
            
-            $data = array(
+            $data = [
                 'userid' => $session->get('userid'),
-                'title'     => "page title",
-                'elections'  => $elections,
-            );
+                'title'     => "Election Page",
+                'elections'  => $model->get_elections(),
+            ];
 
             return view('voter_pages/header', $data)
                     .view('voter_pages/voter_index.php', $data)
@@ -38,9 +37,9 @@
             // get posted data
             $data = $this->request->getPost(array_keys($rules));
             // validate and login voter
-            if ($this->validateData($data, $rules) && $model->voter_login($data['username'], $data['password']))
+            if($this->validateData($data, $rules) && $model->voter_login($data['username'], $data['password']))
             {
-                return redirect()->route('voting'); //$this->voter_dashboard(); // view('voter_pages/voter_index');
+                return redirect()->route('voting');
             }
 
             $credentials  = array(

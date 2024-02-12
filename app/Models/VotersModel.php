@@ -8,7 +8,7 @@
         protected $table = 'voters';
         protected $allowedFields = ['firstname','lastname', 'username','email', 'nin', 'password', 'region_id'];
         
-
+        
         public function register_voter(){
             // check if user already registered
             $data = array(
