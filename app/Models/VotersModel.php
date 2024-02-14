@@ -50,17 +50,19 @@
 
         public function get_elections(){
             $session = session(); // \Config\Services::session($config);
+            $db = \Config\Database::connect();
 
-            $election_result = $this->db->query(
+            $election_result = $db->query(
                 "
-                SELECT DISTINCT(e.name) AS election,c.surname as candidate,  e.id AS election_id
+                SELECT DISTINCT(e.name) AS election,c.surname as candidate,  
+                e.id AS election_id
                 FROM election e 
                 JOIN candidate c ON c.election_id = e.id
                 WHERE e.id IN (
                     SELECT vhe.election_id 
                     FROM voter_has_election vhe
                     WHERE vhe.voter_id = ".$session->get('userid')." 
-                    AND status = 'not voted'
+                    AND vhe.status = 'not voted'
                 )
                 AND e.status = 'ongoing'
                 order by election

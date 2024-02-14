@@ -1,4 +1,21 @@
 <br/><br/><br/><br/>
+<?php
+
+
+    for($index=0; $index < count($elections); $index++){
+      print("\n");
+      $candidates = get_candidate($elections[$index]['election_id']);
+      print("\n");
+      print($index+1); print("\n");
+      print($elections[$index]['election']); print("\n");
+
+      // if (array_key_exists($election[$index+1]['election'], $elections))
+      // if(!$elections[$index+1]['election'] === $elections[$index]['election']){
+      // print($elections[$index]['election']); print("\n");
+      // }
+      print("###################################################################");
+    }
+?>
 <table class ='table table-condensed'>
   <thead>
     <tr><th>ID</th><th><center>Election</center><th><th>Choice Candidate</th></tr>
