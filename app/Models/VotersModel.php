@@ -7,7 +7,48 @@
     class VotersModel extends Model{
         protected $table = 'voters';
         protected $allowedFields = ['firstname','lastname', 'username','email', 'nin', 'password', 'region_id'];
-        
+        public $session;
+
+        public function __construct(){
+           $this->session = \Config\Services::session();
+        }
+        public function vote(array $votes){
+            $db      = \Config\Database::connect();
+            $session = \Config\Services::session();
+            
+
+            // loop through the votes and vote each candidate
+            foreach($votes as $key => $val){
+                $builder = $db->table('candidate');
+                $builder->select(['id', 'election_id']);
+                $builder->where(['id' => $val]);
+                $data = $builder->get()->getResultArray();
+
+                // vote for each candidate chosen
+                foreach($data as $row){
+                    // cast vote
+                    $insert_data = [
+                        'voter_id' => $this->session->get('userid'),
+                        'candidate_id'  =>  $row['id'],
+                        'election_id'   =>  $row['election_id']
+                    ];
+
+                    $builder = $db->table('votes'); // insertion table
+                    $builder->insert($insert_data);
+                    
+                    // update voter_has_election
+                    // prevents multiple voting
+                    $builder = $db->table('voter_has_election');
+                    $update_data = [
+                        'status'    => 'voted',
+                    ];
+                    $builder->where('voter_id', $this->session->get('userid'));
+                    $builder->update($update_data);
+                }
+                
+            }
+            return TRUE;
+        }
         
         public function register_voter(){
             // check if user already registered
@@ -83,27 +124,37 @@
         public function voter_login($username, $password){  
             // var_dump($user_session_data);
             $session = \Config\Services::session(); // initialize session
+            $db      = \Config\Database::connect();
 
-            $username = $this->db->escape($username);
-            $password = hash('sha512',$this->db->escape($password));
+            $username = $db->escape($username);
+            $password = hash('sha512',$db->escape($password));
     
+
+            // $sql = "SELECT id,username, email FROM voters WHERE username = ? AND password = ?";
+            // $result = $db->query($sql, array($username, $password));
             
-            $sql = "SELECT id,username, email FROM voters WHERE username = ? AND password = ?";
-            $result = $this->db->query($sql, array($username, $password));
-            // exit(var_dump($result->getNumRows));
-            if ($result->getNumRows() === 1){
-                $result = $result->getRowArray(); // convert to array
-                $userdata = [
-                    'userid'        => $result['id'],
-                    'username'  => $result['username'],
-                    'email'     => $result['email'],
-                    'logged_in' => TRUE
-                ];
-                $session->set($userdata);
-                
-                return TRUE;
+            $builder = $db->table('voters');
+            $builder->select(['id', 'username', 'email']);
+            $builder->where('username', $username);
+            $builder->where('password', $password);
+            $result = $builder->get()->getResult();
+ 
+            // if user exists
+            if(count($result)){
+                // add session value
+                foreach($result as $user){
+                    // collate session data
+                    $userdata = [
+                        'userid'    => $user->id,
+                        'username'  => $user->username,
+                        'email'     => $user->email,
+                        'logged_in' => True 
+                    ];
+                    $session->set($userdata);
+                    return TRUE;
                 }
-            return FALSE;
+                return TRUE;
+            }
             
         }
 

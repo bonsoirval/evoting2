@@ -24,9 +24,30 @@
                     .view('voter_pages/footer');
         }
 
+        public function vote(){
+            $request = \Config\Services::request();
+
+            $model = model('VotersModel');
+            
+            if(!empty($this->request->getPost() && $request->is('post'))){ # confirm there is values
+                $model->vote($this->request->getPost());
+                
+                // voting successful
+                return redirect()->route('vote_successful');
+            }
+            // no voting
+            return redirect()->route('voting');
+        }
+
+        public function vote_successful(){
+            return view('voter_pages/header', ['title' => 'Voter Login Page'])
+                    .view('voter_pages/vote_success')
+                    .view('voter_pages/footer');
+        }
+
         public function login(){
             helper(['form', 'url']);
-            $model = model(VotersModel::class);
+            $model = model('VotersModel');
 
             $rules = [
                 // rules here
@@ -34,14 +55,18 @@
                 'password'      => 'required',
             ];
 
-            // get posted data
-            $data = $this->request->getPost(array_keys($rules));
-            // validate and login voter
-            if($this->validateData($data, $rules) && $model->voter_login($data['username'], $data['password']))
-            {
-                return redirect()->route('voting');
-            }
+            if(!empty($this->request->getPost())){
+    
+                // get posted data
+                $data = $this->request->getPost(array_keys($rules));
 
+                // validate and login voter
+                if($this->validateData($data, $rules) && 
+                $model->voter_login($data['username'], $data['password']))
+                {
+                    return redirect()->route('voting');
+                }
+            }
             $credentials  = array(
                 'username' => array('name'	=>	"username", 'id' =>	"username",'required'	=> 'required','type' => "text",'class' => "form-control",'placeholder' => 'Enter username','value' => set_value('username')),
                 'password' => array('name' => 'password','id' => 'pwd','required' => 'required','type' => 'password','class' => 'form-control','placeholder' => 'Enter password','value' => set_value('password')),
@@ -50,33 +75,11 @@
             return view('header', ['title' => 'Voter Login Page'])
                     .view('voter_login', $credentials)
                     .view('footer');
-
-		// # Validation rules for login
-		// $this->form_validation->set_rules('username', "Username", 'required');
-		// $this->form_validation->set_rules('password', "Password", 'required');
-
-		// if ($this->form_validation->run() === FALSE){
-		// 	$this->login_form();
-			
-		// }else{
-		// 	// $this->load->model('Voters_model');
-		// 	$logged_in = $this->Voters_model->login_voter();
-
-		// 	if ($logged_in === FALSE) {
-		// 		// show login form
-		// 		$this->login_form();
-		// 	}else {
-		// 		// exit("Halt");
-		// 		$link = base_url() . 'index.php/voter_dashboard/index';
-		// 		redirect($link); //)->to($link);
-
-		// 	}
-
-		// }
         }
 
+
         public function logout(){
-            $model = model(VotersModel::class);
+            $model = model('VotersModel');
             $model->logout();
             return redirect()->route('/'); 
             
@@ -111,8 +114,7 @@
             {
                 $this->index();
             }
-            $model = model(VotersModel::class);
-            
+            $model = model('VotersModel'); 
             try{
                 $model->register_voters();
                 /*

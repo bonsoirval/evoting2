@@ -18,50 +18,8 @@ use CodeIgniter\Model;
 if (!function_exists('get_candidate')){
     // get candidates
     function get_candidate($election_id){
-
         $db = \Config\Database::connect();
-        // $candidates = $db->query(
-        //     "
-        //         SELECT e.name as name,
-        //         concat(c.firstname, ' ' , c.surname, ' ', c.lastname) as cand_name, 
-        //         c.id AS cand_id, p.name AS party
-        //         FROM candidate c
-        //         JOIN election e ON e.id = c.election_id
-        //         JOIN party p ON c.party_id = p.id
-        //         WHERE c.election_id = ".(int)$election_id."
-
-               
-        //     "
-        // )->getResultArray();
-
-        $candidates = $db->query(
-            "SELECT concat(c.surname, ' ',c.firstname) AS cand_name, e.name AS election
-            FROM candidate AS c
-            INNER JOIN election AS e ON e.id = c.election_id 
-            WHERE election_id in (1,2,3)
-            "
-        )->getResultArray();
-        exit(var_dump($candidates));
-        $new_candidates = array();
-        foreach($candidates as $key => $value){
-            for($index=0; $index < count($value); $index++){
-                if(array_key_exists($candidates[$index]['election'], $new_candidates)){
-                    // dont add new election key
-                    // array_push($new_candidates[$index]['election'], $value['cand_name']);
-                }else{
-                    // add new election key
-                    $new_candidates[$candidates[$index]['election']] = array(
-                        $candidates[$index]['cand_name'] = [
-                            'cand_name' => $candidates[$index]['cand_name'],
-                            'election' => $candidates[$index]['election']
-                        ]);
-                    // ); //$candidates[$index]['eleccation'];
-                }
-            }
-        }
-        exit(var_dump($new_candidates));
-        return $candidates; 
-    }
+        return $db->query("SELECT concat(c.surname,' ', c.firstname, ' ', c.lastname) as cand_name, c.id AS cand_id FROM candidate AS c WHERE election_id = $election_id ")->getResultArray();}
 }
 if (!function_exists('get_election_id')){
     //get election id
