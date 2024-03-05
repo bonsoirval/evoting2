@@ -9,6 +9,8 @@ use App\Controllers\News; // add this line
  */
 $routes->get('logout', 'Voters::logout');
 
+$routes->post('result', 'Results::index');
+$routes->get('result', 'Results::index');
 $routes->get('vote_successful',  'Voters::vote_successful');
 $routes->post('vote', 'Voters::vote');
 $routes->get('voting', 'Voters::voter_dashboard');

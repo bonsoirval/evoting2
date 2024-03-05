@@ -53,7 +53,7 @@
                 <li class='active'><a href="<?= base_url(); ?>">Home</a></li>
                 <li><a href="<?= base_url('register') ?>">Register</a></li>
                 <li><a href="<?= base_url('login'); ?>">Login</a></li>
-                <li><a href="#" >View Result</a></li>
+                <li><a href="<?= base_url('result'); ?>" >View Result</a></li>
                 <li><a href="#">Contact Us</a></li>
                 <!--li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
