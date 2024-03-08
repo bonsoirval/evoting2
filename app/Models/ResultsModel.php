@@ -19,9 +19,21 @@
             
             return $db->query(
                 "
-                    SELECT r.state, e.name, concat(c.firstname, ' ', c.surname) AS candidate from regions AS r
+                    SELECT v.voter_id AS votes, r.state, e.name AS election, 
+                    concat(c.firstname, ' ', c.surname) AS candidate
+                
+                    FROM regions AS r
                     JOIN election AS e ON e.region_id = r.id
                     JOIN candidate AS c ON c.election_id = e.id
+                    LEFT JOIN votes AS v ON v.candidate_id =c.id
+                    -- // WHERE e.id IN  (
+                    -- //     SELECT e.id
+                    -- //     FROM election AS e
+                    -- //     JOIN votes AS v ON YEAR(v.vote_time) = YEAR(e.election_date) 
+                    -- //     WHERE YEAR(election_date) = $year
+                    -- // ) 
+                    ORDER BY e.name
+                                 
                     
                 "
             )->getResultArray();
