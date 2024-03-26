@@ -21,6 +21,7 @@ if (!function_exists('get_candidate')){
         $db = \Config\Database::connect();
         return $db->query("SELECT concat(c.surname,' ', c.firstname, ' ', c.lastname) as cand_name, c.id AS cand_id FROM candidate AS c WHERE election_id = $election_id ")->getResultArray();}
 }
+
 if (!function_exists('get_election_id')){
     //get election id
     function get_election_id($election) {
@@ -30,4 +31,26 @@ if (!function_exists('get_election_id')){
     }
 }
 
+if(!function_exists('get_election_result')){
+    function get_election_result($candidate_id){
+        $db = \Config\Database::connect();
+        return $db->query("
+        SELECT count(*) AS vote FROM `votes` WHERE candidate_id = 5;
+        ")->getRow()->vote;
+        // return $vote->vote;
+    }
+}
 
+if(!function_exists('loggedIn')){
+    function loggedIn(){
+        $session = \Config\Services::session();
+
+        if(($session->get('email') == True) && !($session->get('loggedIn') == True)){
+            return redirect()->route('admin_login');
+        }
+        return("Paused");
+        return redirect()->route('admin_login');
+
+
+    }
+}

@@ -41,4 +41,33 @@ class Validation extends BaseConfig
     // --------------------------------------------------------------------
     // Rules
     // --------------------------------------------------------------------
+
+
+    public array $add_party = [
+        'party' => 'required|is_unique[party.name]',
+        'abbreviation' => 'required|is_unique[party.abbreviation]',
+    ];
+
+    public array $add_party_errors = [
+        'party' =>[
+            'required' => 'Party must be filled',
+            'is_unique' => 'Party already exists'
+        ],
+        'abbreviation' => [
+            'required' => 'Party abbreviation must be filled',
+            'is_unique' => 'Party abbreviation already exists'
+        ]
+    ];
+    public array $admin_login = [
+        'username' => 'required|max_length[30]|min_length[6]',
+        'password' => 'required|max_length[30]|min_length[6]'
+        ];
+    public array $admin_login_errors = [
+        'username' => [
+            'required' => "You must choose a username",
+        ],
+        'password' => [
+            'required' => 'Please enter password',
+        ]
+        ];
 }

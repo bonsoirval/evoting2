@@ -3,12 +3,26 @@
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Pages;
 use App\Controllers\News; // add this line
+use App\Controllers\Admin; // add this line
 
 /**
  * @var RouteCollection $routes
  */
+/** Admin Routes Start */
+$routes->get('h_admin/add_party', 'Admin\Admins::add_party', ['as' => 'add_party']);
+$routes->post('h_admin/add_party', 'Admin\Admins::add_party', ['as' => 'add_party_post']);
+$routes->get('h_admin/signout', 'Admin\Admins::signout', ['as' => 'signout']);
+$routes->get('h_admin', 'Admin\Admins::index', ['as' => 'admin_login']);
+$routes->get('h_admin/index', 'Admin\Admins::index');
+
+$routes->post('h_admin/index', 'Admin\Admins::index');
+/** Admin Routes End */
+
+
 $routes->get('logout', 'Voters::logout');
 
+$routes->post('result', 'Results::index');
+$routes->get('result', 'Results::index');
 $routes->get('vote_successful',  'Voters::vote_successful');
 $routes->post('vote', 'Voters::vote');
 $routes->get('voting', 'Voters::voter_dashboard');

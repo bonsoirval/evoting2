@@ -11,7 +11,7 @@
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>
-        <?php if($title){ ?>
+        <?php if($title){?>
         <?= $title; }?>
     </title>
 
