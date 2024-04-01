@@ -12,9 +12,105 @@
 
 
 class Admins extends BaseController{
+    // update party 
+    public function update_party(){
+        $session    = \Config\Services::session();
+        $request    = \Config\Services::request();
+        $db         = \Config\Database::connect();
+        $uri = service('uri');
+
+        $data1 = $uri->getSegment(3); // ' => ['slogan', 'name']]);
+        // fetch submitted data  
+        // $data['request'] = $this->request->getPost(['slogan']);
+
+        exit(var_dump($data1));
+    }
+
+    // fetch party details from database
+    public function manage_party(){
+        helper('form');
+        $request    = \Config\Services::request(); 
+        $session    = \Config\Services::session();
+        $db         = \Config\Database::connect();
+
+        // data values 
+        $data['request'] = $this->request->getPost(['query', 'search_type','attr']);
+        $data['username'] = $session->get('username');
+
+        // form fields
+        $data['query']        = array('type' => 'text','name' => 'query','class' => 'form-control','id' => 'query','required' => TRUE,'placeholder' => 'Search');
+        $data['search_type']  = array('' => 'Select Search Item','name' => 'Party Name','party_slogan' => 'Party Slogan','party_abbreviation' => 'Party Abbreviation');
+        $data['attr']         = array('class' => 'form-control');
+        
+        $data['title'] = "Admin title";
+        // exit(var_dump($data['request']));
+        if($this->validateData($data['request'], 'manage_party')){
+            $model = model('Admin/AdminModel');
+            // execute needed functions
+            
+            $query = $request->getPost('query');
+            $query_type = $request->getPost('search_type'); 
+            
+            $data['table_data'] = $model->get_parties($query, $query_type);
+            // exit(var_dump($data['table_data']));
+
+            }
+
+            /**
+             * Load the view with $data['table_data'] if 
+             * $model->get_parties($query, $query_type) return value
+             * otherwise just load the detault form view
+             */
+            return(
+                view('admin/partials/header', $data)
+                .view('admin/manage_party', $data)
+                .view('admin/partials/footer', $data)
+            );
+           
+        
+    }
 
     public function add_party(){
-        echo "adding party";
+        helper('form'); 
+        $request = \Config\Services::request(); # request service
+        $session = \Config\Services::session(); # session service
+
+        # fetch user input 
+        $data['request'] = $this->request->getPost(['name', 'abbreviation', 'slogan', 'ideology']);
+        
+        // form fields
+        $data['name'] = array('name' => 'name', 'type' => 'text','class' => 'form-control');
+        $data['abbreviation'] = array('name' => 'abbreviation', 'type' => "text",'class' => "form-control");
+        $data['slogan'] = array('name' => 'slogan', 'type' => "text",'class' => "form-control");
+        $data['ideology'] = array('name' => 'ideology', 'style' => "height: 100px", 'class' => "form-control");
+        $data['register'] = array('name' => 'register', 'type' => "submit", 'class' => "btn btn-primary",'content' => "Register");
+        $data['title'] = 'Add Party';
+        $data['username'] = $session->get('username');
+        $data['errors'] = \Config\Services::validation()->listErrors();
+        $data['status'] = null;
+
+        // if validation failed
+        if(!$this->validateData($data['request'], 'add_party')){
+            // validation failed
+            return view('admin/partials/header', $data)
+                    .view('admin/add_party', $data)
+                    .view('admin/partials/footer',$data);
+        }else{
+            $model = model('Admin/AdminModel');
+            if($model->add_party($data['request']) === True){
+                
+                // get flash message 
+                $data['status'] = $session->getFlashdata('add_party_success');
+                
+                return view('admin/partials/header',$data)
+                        .view('admin/add_party', $data)
+                        .view('admin/partials/footer',$data);
+
+            }else{
+                print('Catch error pls');
+            }
+        }
+
     }
 
     public function index(){

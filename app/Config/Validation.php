@@ -42,21 +42,41 @@ class Validation extends BaseConfig
     // Rules
     // --------------------------------------------------------------------
 
+    public array $manage_party = [
+        'query' => 'required',
+        'search_type' => 'required'
+    ];
+
+    public array $manage_party_errors = [
+        'query' => ['required' => '<style color:"red">Search Qery needed</style>'],
+        'search_type' => ['required' => '<style color:"red">Search Qery needed</style>']
+    ];
 
     public array $add_party = [
-        'party' => 'required|is_unique[party.name]',
+        'name' => 'required|is_unique[party.name]',
         'abbreviation' => 'required|is_unique[party.abbreviation]',
+        'slogan' => 'required|is_unique[party.slogan]',
+        'ideology' => 'required|is_unique[party.ideology]',
     ];
 
     public array $add_party_errors = [
-        'party' =>[
+        'name' =>[
             'required' => 'Party must be filled',
             'is_unique' => 'Party already exists'
         ],
         'abbreviation' => [
-            'required' => 'Party abbreviation must be filled',
-            'is_unique' => 'Party abbreviation already exists'
+            'required' => '<style color:"red">Party abbreviation must be filled',
+            'is_unique' => '<style color:"red">Party abbreviation already exists'
+        ],
+        'slogan' => [
+            'required' => '<style color:"red">Party slogan must be filled</style>',
+            'is_unique' => '<style color:"red">Party slogan already exists</style>'
+        ],
+        'ideology' => [
+            'required' => '<style color:"red">Party ideology must be filled</style>',
+            'is_unique' => '<style color:"red">Ideology already exists</style>'
         ]
+
     ];
     public array $admin_login = [
         'username' => 'required|max_length[30]|min_length[6]',
@@ -64,10 +84,10 @@ class Validation extends BaseConfig
         ];
     public array $admin_login_errors = [
         'username' => [
-            'required' => "You must choose a username",
+            'required' => '<style color:"red">You must choose a username</style>',
         ],
         'password' => [
-            'required' => 'Please enter password',
+            'required' => '<style color:"red">Please enter password</style>',
         ]
         ];
 }

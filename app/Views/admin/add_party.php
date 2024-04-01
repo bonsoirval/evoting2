@@ -21,41 +21,43 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Add Party Form</h5>
-
+              <?php print($status); ?>
               <!-- General Form Elements -->
-              <?php echo form_open($action="", $attributes=array('method'=>"POST"));?>
+              <?= form_open($action="", $attributes=array('method'=>"POST"));?>
+                <?= csrf_field(); ?>
+                <?php if (!empty(validation_list_errors())){print(validation_list_errors());}; ?>
                 <div class="row mb-3">
                   <label for="inputText" class="col-sm-2 col-form-label">Name</label>
                   <div class="col-sm-10">
-                    <?php echo form_error('party', '<div class="error">', '</div>'); ?>
-                    <?php echo form_input($name); ?>
+                  <?php if($errors) print($errors); ?>
+                    <?= form_input($name); ?>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label for="inputEmail" class="col-sm-2 col-form-label">Abbreviation</label>
                   <div class="col-sm-10">
-                    <?php echo form_error('abbreviation', '<div class="error">', '</div>'); ?>
-                    <?php echo form_input($abbreviation); ?>
+                  <?= $errors; ?>
+                  <?= form_input($abbreviation); ?>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label for="inputEmail" class="col-sm-2 col-form-label">Slogan</label>
                   <div class="col-sm-10">
-                    <?php echo form_error('slogan', '<div class="error">', '</div>'); ?>
-                    <?php echo form_input($slogan); ?>
+                    <?= $errors; ?>
+                    <?= form_input($slogan); ?>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label for="inputEmail" class="col-sm-2 col-form-label">Ideology</label>
                   <div class="col-sm-10">
-                    <?php echo form_error('ideologoy', 'div class="errro">', '</div>'); ?>
-                    <?php echo form_textarea($ideology); ?>
+                    <?= $errors; ?>
+                    <?= form_textarea($ideology); ?>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label"></label>
                   <div class="col-sm-10">
-                    <?php echo form_button($register); ?>
+                    <?= form_button($register); ?>
                   </div>
                 </div>
 

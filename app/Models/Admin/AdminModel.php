@@ -5,6 +5,38 @@
   
 
     class AdminModel extends Model{
+
+        // get party being searched for
+        public function get_parties($query, $query_type){
+            $db = \Config\Database::connect(); 
+            $session = \Config\Services::session();
+
+            $sql = "SELECT id,name, abbreviation, slogan, ideology, status FROM party WHERE $query_type = ?";
+            $search_result = $db->query($sql, $query)->getRow(); //, 'live', 'Rick']);
+
+            // Add session data if data exists 
+            if (!empty($search_result)){
+                $session_data = array('search_id' => $search_result->id);
+                $session->set($session_data);
+                return $search_result;
+            }
+            return FALSE;
+        }
+
+        public function add_party($data){
+            $db = \Config\Database::connect();
+            $session = \Config\Services::session();
+
+            // build table connection 
+            $builder = $db->table('party');
+            $data['status'] = 'active';
+
+            if($builder->insert($db->escape($data))){
+                $session->setFlashdata('add_party_success', "<span class='primary success'>Party Added Successfully</span>");
+                return True;
+            }
+            return False;
+        }
         
         /** Log admin userr out */
         public function signout(){

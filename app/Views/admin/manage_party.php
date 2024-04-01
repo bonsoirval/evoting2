@@ -22,36 +22,14 @@
             <h5 class="card-title">Manage Party</h5>
             <!-- General Form Elements -->
             <div class="search-bar">
-            <?php echo validation_errors(); ?>
-              <?php echo form_open($action= base_url('index.php/admin/manage_party'), $attributes=array('method' => 'POST', "class" => "search-form d-flex align-items-center")); ?>
-              <?php echo form_input($query); ?>
-              <!-- <input type="text" name="query" placeholder="Search" title="Enter search keyword">  -->
-              <?php echo form_dropdown('search_type', $search_type, $selected = 'default',$extra=$attr); ?>  
-
+            <?php validation_list_errors(); ?>
+              <?= form_open($action= base_url('h_admin/manage_party'), $attributes=array('method' => 'POST', "class" => "search-form d-flex align-items-center")); ?>
+                <?= csrf_field(); ?>
+                <?= form_input($query); ?>
+                <?= form_dropdown('search_type', $search_type, $selected = 'default',$extra=$attr); ?>  
                 <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-              </form>
+              <?= form_close(); ?>
             </div><!-- End Search Bar -->
-
-
-            <!-- ?php echo form_open($action="", $attributes=array('method'=>"POST"));?>
-            
-              <div class="row mb-3">
-                  < ?php form_error('query', 'div class="errro">', '</div>'); ?>
-                  <input type='text' name='party search' placeholder="enter party name">
-                  <select>
-                    <option value="party_name">Pary  name</option>
-                    <option value="slogan">Slogan</option>
-                    <option value="abbrevion">Abbreviation</option>
-                  </select>
-                    <button type="submit" class="btn btn-primary">Search Party</button>
-                <div class="row mb-3">
-                <label class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Submit Form</button>
-                </div>
-              </div>
-              </div>
-            < ?php //echo form_close(); ?>< !-- End General Form Elements -->
             <table class="table">
             <thead>
               <tr>
@@ -65,11 +43,9 @@
             </thead>
             <tbody>
               <?php if (empty($table_data)) { ?>
-              <?php echo "<tr><td><b>No Data To Display</b><td></tr>"; }else{?>
-
-              <?php for($index = 1; $index <= count($table_data); $index++){ ?>
-              <?php 
-                echo "<tr>";
+              <?= "<tr><td><b>No Data To Display</b><td></tr>"; }else{?>
+              <?php for($index = 1; $index <= count(array($table_data)); $index++){ ?>
+              <?= "<tr>";
                 //echo "<th scope='row'>$index</th>";
                 echo "<td>" . $table_data->name . "</td>";
                 echo "<td>" . $table_data->abbreviation . "</td>";
@@ -77,10 +53,8 @@
                 echo "<td>" . $table_data->ideology . "</td>";
                 echo "<td>" . $table_data->status . "</td>";
                 ?>
-              <td><a target="_blank" href="<?php echo base_url('index.php/admin/update_party'); ?>">Update</a></td>
-              <?php 
-                // echo "<td>" . $table_data->slogan . "</td>";
-                echo "</tr>";
+              <td><a target="_blank" href="<?= base_url('h_admin/update_party?name='.$table_data->name.'&abbreviation='.$table_data->abbreviation.'&slogan='.$table_data->slogan); ?>">Update</a></td>
+              <?= "</tr>";
               ?>
               <?php } ?>
               <?php } ?>
