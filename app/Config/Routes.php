@@ -9,9 +9,12 @@ use App\Controllers\Admin; // add this line
  * @var RouteCollection $routes
  */
 /** Admin Routes Start */
+
+$routes->get('h_admin/update_party/(:segment)/(:segment)/(:segment)/(:segment)/(:segment)', 'Admin\Admins::update_party/$1/$2/$3/$4/$5/$6');
+$routes->post('h_admin/update_party/(:segment)/(:segment)/(:segment)/(:segment)/(:segment)', 'Admin\Admins::update_party/$1/$2/$3/$4/$5/$6');
 $routes->get('h_admin/update_party', 'Admin\Admins::update_party');
 $routes->post('h_admin/update_party', 'Admin\Admins::update_party');
-$routes->get('h_admin/manage_party', 'Admin\Admins::manage_party'); 
+$routes->get('h_admin/manage_party', 'Admin\Admins::manage_party', ['as' => 'manage_party']); 
 $routes->post('h_admin/manage_party', 'Admin\Admins::manage_party');
 $routes->get('h_admin/add_party', 'Admin\Admins::add_party', ['as' => 'add_party']);
 $routes->post('h_admin/add_party', 'Admin\Admins::add_party', ['as' => 'add_party_post']);

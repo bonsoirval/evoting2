@@ -28,26 +28,23 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (empty($party_update)) { ?>
+              <?php if (empty($name)) { ?>
               <?php echo "<tr><td><b>No Data To Display</b><td></tr>"; }else{?>
-              <?php 
-                if($this->session->flashdata('party_update') != ''){
-                  print($this->session->flashdata('message_name'));
-                }
-              ?>
-              <?php print(form_open()); ?>
-              <?php print(validation_errors('<span class="error">', '</span>')); ?>
-              <?php for($index = 1; $index <= count($party_update); $index++){ ?>
+              <?= $session->getFlashdata('party_update'); ?>
+              
+              <?= form_open(); ?>
+              <?= csrf_field(); ?>
+              <?//= validation_list_errors();?>
               <td><input type="hidden" name="party_clicked" value="clicked" />
-              <?php print(form_input($party)); ?></td>
-              <td><?php print(form_input($abbreviation)); ?></td>
-              <td><?php print(form_input($slogan)); ?></td>
-              <td><?php print(form_input($ideology)); ?></td> 
-              <td><?php print(form_dropdown($status, $options, $extra)); ?>
+              <?= form_input($name); ?></td>
+              <td><?= form_input($abbreviation); ?></td>
+              <td><?= form_input($slogan); ?></td>
+              <td><?= form_input($ideology); ?></td> 
+              <td><?= form_dropdown($status, $options, $extra); ?>
               </td>
-              <td><?php print(form_submit($submit = array('name' => 'party_update','class' => 'form-control primary', 'value'=>"Update"))); ?></td>
-              <?php echo "</tr>"; ?>
-              <?php print(form_close()); }} ?>
+              <td><?= form_submit($submit = array('name' => 'party_update','class' => 'form-control primary', 'value'=>"Update")); ?></td>
+              <?= "</tr>"; ?>
+              <?= form_close(); } ?>
             </tbody>
           </table>
           </div>

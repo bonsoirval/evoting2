@@ -12,18 +12,60 @@
 
 
 class Admins extends BaseController{
+    public function update_party_action(){
+        echo "How are you";
+    }
     // update party 
     public function update_party(){
+        helper('form'); // load form library 
+        $model = model('Admin/AdminModel');
+
         $session    = \Config\Services::session();
         $request    = \Config\Services::request();
         $db         = \Config\Database::connect();
-        $uri = service('uri');
+        $uri = $this->request->getUri(); // current_url(true); //service('uri');
 
-        $data1 = $uri->getSegment(3); // ' => ['slogan', 'name']]);
-        // fetch submitted data  
-        // $data['request'] = $this->request->getPost(['slogan']);
+        // posted data
+        $data['submitted_data'] = $this->request->getPost(
+            ['name', 'abbreviation','slogan','status', 'ideology']
+        );
+        $data['title'] = "Party update page";
+        $data['name_from_url'] = urldecode($uri->getSegment(3)); // ' => ['slogan', 'name']]);
+        $data['abbreviation'] = urldecode($uri->getSegment(4));
+        $data['slogan'] = urldecode($uri->getSegment(5));
+        $data['ideology'] = urldecode($uri->getSegment(6)); 
+        $data['status'] = urldecode($uri->getSegment(7));
+        $data['username'] = $session->get('username');
+        $data['session'] = $session;
 
-        exit(var_dump($data1));
+        // exit(var_dump($data['submitted_data']));
+
+        // data posting failed, (re)load view
+        if(!$this->validateData($data['submitted_data'], 'update_party')){
+            // $data['party_update'] = $party_update;
+            $data['name']        = array('name'=>'name', 'class'=>'form-control', 'value' => $data['name_from_url']);
+            $data['abbreviation'] = array('name' => 'abbreviation', 'class'=>'form-control', 'value' => $data['abbreviation']);
+            $data['slogan']       = array('name'=>'slogan', 'class'=>'form-control', 'value' => $data['slogan']);
+            $data['ideology']     = array('name' => 'ideology', 'class'=>'form-control', 'value'=> $data['ideology']);
+            $data['status']       = array('name' => 'status');
+            $data['options']      = array('' =>'Select Status', 'deactivated' => 'Deactivated', 'active' => 'Active', 'non' => 'None existent' );
+            $data['extra']        = array('class' => 'form-control');
+
+            return view('admin/partials/header',$data).view('admin/update_party', $data).view('admin/partials/footer',$data);
+
+        }else{
+            $data['session'] = $session;
+            $result = $model->update_party($data['submitted_data']);
+            
+            // return the view 
+            return redirect()->route('manage_party');
+        }
+
+       
+        // // fetch submitted data  
+        // // $data['request'] = $this->request->getPost(['slogan']);
+        // return view('admin/partials/header',$data).view('admin/update_party',$data).view('admin/partials/footer',$data);
+        // exit(var_dump($data));
     }
 
     // fetch party details from database
@@ -42,6 +84,7 @@ class Admins extends BaseController{
         $data['search_type']  = array('' => 'Select Search Item','name' => 'Party Name','party_slogan' => 'Party Slogan','party_abbreviation' => 'Party Abbreviation');
         $data['attr']         = array('class' => 'form-control');
         
+        $data['session'] = $session;
         $data['title'] = "Admin title";
         // exit(var_dump($data['request']));
         if($this->validateData($data['request'], 'manage_party')){

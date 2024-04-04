@@ -22,7 +22,8 @@
             <h5 class="card-title">Manage Party</h5>
             <!-- General Form Elements -->
             <div class="search-bar">
-            <?php validation_list_errors(); ?>
+            <?= validation_list_errors(); ?>
+            <?= $session->getFlashdata('party_update'); ?> 
               <?= form_open($action= base_url('h_admin/manage_party'), $attributes=array('method' => 'POST', "class" => "search-form d-flex align-items-center")); ?>
                 <?= csrf_field(); ?>
                 <?= form_input($query); ?>
@@ -53,7 +54,7 @@
                 echo "<td>" . $table_data->ideology . "</td>";
                 echo "<td>" . $table_data->status . "</td>";
                 ?>
-              <td><a target="_blank" href="<?= base_url('h_admin/update_party?name='.$table_data->name.'&abbreviation='.$table_data->abbreviation.'&slogan='.$table_data->slogan); ?>">Update</a></td>
+              <td><a target="_blank" href="<?= base_url("h_admin/update_party/$table_data->name/$table_data->abbreviation/$table_data->slogan/$table_data->ideology/$table_data->status"); ?>">Update</a></td>
               <?= "</tr>";
               ?>
               <?php } ?>

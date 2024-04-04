@@ -5,6 +5,21 @@
   
 
     class AdminModel extends Model{
+        // update party  
+        public function update_party($data){
+            $db = \Config\Database::connect();
+            $session = \Config\Services::session();
+
+            // build table connection 
+            $builder = $db->table('party');
+            $data['status'] = 'active';
+            $builder->where('id', (int)$session->get('search_id'));
+            if($builder->update($db->escape($data))){
+                $session->setFlashdata('party_update', 'Successfully updated party');
+                return TRUE;
+            }
+            exit("stop");
+        }
 
         // get party being searched for
         public function get_parties($query, $query_type){

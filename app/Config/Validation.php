@@ -42,9 +42,25 @@ class Validation extends BaseConfig
     // Rules
     // --------------------------------------------------------------------
 
+    public array $update_party = [
+        'name' => 'required|is_unique[party.name]',
+        'abbreviation' => 'required|is_unique[party.abbreviation]',
+        'slogan'    => 'required|is_unique[party.slogan]',
+        'ideology' => 'required|is_unique[party.ideology]',
+        'status' => 'required',
+    ];
+
     public array $manage_party = [
         'query' => 'required',
         'search_type' => 'required'
+    ];
+
+    public array $update_party_errors = [
+        'name' => ['required' => '<style color="red">Search Query needed</style>'],
+        'abbreviation' => ['required' => '<style color:"red">Party abbreviation is required</style>'],
+        'slogan' => ['required' => '<style color:"red">Party slogan is required</style>'],
+        'ideology' => ['required' => '<style color:"red">Ideology is required</style>'],
+        'status' => ['required' => '<style color:"red">Status is required</style>']
     ];
 
     public array $manage_party_errors = [
