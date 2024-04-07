@@ -5,6 +5,76 @@
   
 
     class AdminModel extends Model{
+    
+        public function add_election($data){
+            $db = \Config\Database::connect();
+
+            /** 
+             * clean data
+             * and insert into database
+             * add flash data
+             */
+            // exit(var_dump($data));
+            if(!empty($data)){
+                // data supplied 
+                $election = array(
+                    'name' => $data['election'], 
+                    'region_id' => $data['region'],
+                    'election_date' => $data['election_date'],
+                );
+                $builder = $db->table('election');
+                $builder->insert($election);
+                $session->setFlashdata('election_added', "Election added successfully");
+                return true;
+            }
+
+            if(null !== $this->input->post('add_election') &&
+            $this->input->post() && $this->form_validation->run() == True){
+                $election = $this->db->escape_str(xss_clean($this->input->post('election')));
+                $region = $this->db->escape_str(xss_clean($this->input->post('region')));
+                $election_date = $this->db->escape_str(xss_clean($this->input->post('election_date')));
+                 
+                // add flash data
+                $this->session->set_flashdata('election_added', "Election added successfully.");
+                return $this->db->insert('election', $data = array('name' => $election, 'region_id' => $region, 'election_date' => $election_date, 'status' => 'upcoming',), True);
+            }
+    
+            return False;
+        }
+
+    // return election region(s) for passed id
+    // or return all election regions
+    public function get_regions($region_id = NULL){
+        $db = \Config\Database::connect();
+        $session = \Config\Services::session();
+        $request = \Config\Services::request();
+
+        if(isset ($region_id)){
+            exit("Value Passed");
+            // clean variable
+            $region_id = xss_clean($this->db->escape_str($region_id));
+
+            $this->db->select("state");
+            $this->db->from('election');
+            $this->db->where('id',$region_id);
+            $result = $this->db->get();
+            return $result;
+        }
+
+        $builder = $db->table('regions')
+                    ->select(['id', 'state'])
+                    ->where('id>=',1)
+                    ->orderBy('state', 'asc');
+        return $builder->get()->getResult();
+       
+        // // pack result into array
+        // $result_arr = array(); 
+        // foreach($result as $row){
+        //     $result_arr[$row['id']] = $row['state'];
+        // }
+       
+    }
+
         // update party  
         public function update_party($data){
             $db = \Config\Database::connect();

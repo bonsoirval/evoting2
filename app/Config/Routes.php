@@ -9,7 +9,10 @@ use App\Controllers\Admin; // add this line
  * @var RouteCollection $routes
  */
 /** Admin Routes Start */
+$routes->get('h_admin/manage_election', 'Admin\Admins::manage_election');
 
+$routes->get('h_admin/add_election', 'Admin\Admins::add_election',['as' => 'add_election']);
+$routes->post('h_admin/add_election', 'Admin\Admins::add_election');
 $routes->get('h_admin/update_party/(:segment)/(:segment)/(:segment)/(:segment)/(:segment)', 'Admin\Admins::update_party/$1/$2/$3/$4/$5/$6');
 $routes->post('h_admin/update_party/(:segment)/(:segment)/(:segment)/(:segment)/(:segment)', 'Admin\Admins::update_party/$1/$2/$3/$4/$5/$6');
 $routes->get('h_admin/update_party', 'Admin\Admins::update_party');

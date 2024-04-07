@@ -12,8 +12,73 @@
 
 
 class Admins extends BaseController{
-    public function update_party_action(){
-        echo "How are you";
+    
+    public function manage_election(){
+        $session = \Config\Services::session();
+        $request = \Config\Services::request();
+
+        // helpers 
+        helper('form');
+        $model = model('Admin/AdminModel');
+
+        $data['submitted_data'] = $request->getPost(['query', 'search_type']);
+        $data['title'] = "Manage Election";
+        $data['username'] = $session->get('username');
+
+        // form fields
+        $data['query']        = array('type' => 'text', 'name' => 'query', 'class' => 'form-control','id' => 'query', 'required' => TRUE,'placeholder' => 'Search value, Date format : yyyy-mm-dd');
+        $data['search_type']  = array('0' => 'Select Search Item', '1' => 'All Elections', '2' => 'Election Title', '3' => 'Election Region', '4' => 'Election Date', '5' => 'Election Status'); 
+        $data['attr']         = array('class' => 'form-control');
+        // found in update_election.php page
+        $data['hidden'] = array('type' => 'hidden','name' => 'election_clicked','value' => 'clicked');
+        
+        if($this->validateData($data['submitted_data'], 'manage_election')){
+            // validated
+            print("Validated");
+        }else{
+            // not validate 
+            print("Not validated");
+        }
+
+        return view('admin/partials/header',$data).view('admin/manage_election', $data).view('admin/partials/footer',$data);
+    }
+
+    public function add_election(){
+        $db = \Config\Database::connect(); 
+        $session = \Config\Services::session();
+        $request = \Config\Services::request();
+        
+        // helpers
+        helper('form');
+        $model = model('Admin/AdminModel');
+
+        $data['submitted_data'] = $request->getPost(
+            ['election','election_date','region']); 
+        
+        // var_dump($data['submitted_data']);
+        // exit(var_dump($this->validateData($data['submitted_data'], 'add_election')));
+
+        $data['title']          = "Add election";
+        $data['username']       = $session->get('username');
+        $data['session'] = $session;
+        
+
+        if(!$this->validateData($data['submitted_data'], 'add_election')){
+            // add form fields to this->data
+            $data['election']       = array('name' => 'election', 'class'=>'form-control', 'type' => 'text', 'required' => True, 'placeholder' => 'Enter election name');
+            $data['election_date']  = array('name' => 'election_date', 'class'=>'form-control', 'type' => 'date', 'required' => True);
+            $data['region']         = array('name' => 'region', 'class'=>'form-control', 'type' => 'text','required' => True, 'placeholder' => 'Enter election region');
+            $data['add_election']   = array('name' => 'add_election', 'type' => 'submit',  'value' => 'Add Election', 'class' => 'form-control');
+            $options = array();
+            foreach($model->get_regions() as $key => $val){$options[$val->id] = $val->state;}
+            $data['options'] = $options;
+            
+            return view('admin/partials/header', $data).view('admin/add_election',$data).view('admin/partials/footer',$data);
+        }else{
+            if($model->add_election($data['submitted_data']) === true){
+                return view('admin/partials/add_election',$data).view('admin/add_election', $data).view('admin/partials/footer',$data);
+            }
+        }
     }
     // update party 
     public function update_party(){

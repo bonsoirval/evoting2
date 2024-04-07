@@ -23,8 +23,9 @@
             <h5 class="card-title">Manage Election</h5>
             <!-- General Form Elements -->
             <div class="search-bar">
-            <?php print(validation_errors()); ?>
-              <?php print(form_open($action = "admin/manage_election", $attributes=array('method' => 'POST', "class" => "search-form d-flex align-items-center"))); ?>
+            <?php //print(validation_errors()); ?>
+              <?= print(form_open($action = "admin/manage_election", $attributes=array('method' => 'POST', "class" => "search-form d-flex align-items-center"))); ?>
+              <?= csrf_field(); ?>
               <?php print form_input($query); ?>
               <?php // print(form_input($hidden)); ?>
               <?php print(form_dropdown('search_type', $search_type, $selected = 'default',$extra=$attr)); ?>  

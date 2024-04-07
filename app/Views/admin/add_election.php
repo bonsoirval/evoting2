@@ -21,37 +21,38 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Add Party Form</h5>
-
             <!-- General Form Elements -->
-            <?php print(form_open($action="", $attributes=array('method'=>"POST", 'name' => 'add_election')));?>
-              <div class="row mb-3"><?php 
-              if($this->session->flashdata('election_added')){
-                print($this->session->flashdata('election_added'));
-                } ?>
-                <?php print(form_label('Election', 'election', $attribute = array('col-sm-2 col-form-label'))); ?>
+            <?= $session->getFlashdata('election_added'); ?>
+            <?=(form_open($action="", $attributes=array('method'=>"POST", 'name' => 'add_election')));?>
+            <?= csrf_field(); ?>  
+            <div class="row mb-3">
+                 <?=(form_label('Election', 'election', $attribute = array('col-sm-2 col-form-label'))); ?>
                 <div class="col-sm-10">
-                  <?php print(form_error('election', '<div class="error">', '</div>')); ?>
-                  <?php print(form_input($election)); ?>
+                  <?php // print(form_error('election', '<div class="error">', '</div>')); ?>
+                  <?=(form_input($election)); ?>
+                  <span style='color:red;'><?= validation_show_error('election') ?></span>
                 </div>
               </div>
               <div class="row mb-3">
-                <?php print(form_label('Election Region', 'election_region')); ?>
+                <?=(form_label('Election Region', 'election_region')); ?>
                 <div class="col-sm-10">
-                  <?php print(form_error('election_region', '<div class="error">', '</div>')); ?>
+                  <?php //print(form_error('election_region', '<div class="error">', '</div>')); ?>
                   <?php // add form_input($region); ?>
-                  <?php print(form_dropdown('region', $options)); ?>
+                  <?= (form_dropdown('region', $options)); ?>
+                  <span style='color:red;'><?= validation_show_error('region') ?></span>
                 </div>
               </div>
               <div class="row mb-3">
-                <?php print(form_label('Election date', 'election_date')); ?>
+                <?=(form_label('Election date', 'election_date')); ?>
                 <div class="col-sm-10">
-                  <?php print(form_error('election_date', '<div class="error">', '</div>')); ?>
-                  <?php print(form_input($election_date)); ?>
+                  <?php //print(form_error('election_date', '<div class="error">', '</div>')); ?>
+                  <?= (form_input($election_date)); ?>
+                  <span style='color:red;'><?= validation_show_error('election_date') ?></span>
                 </div>
               </div>
               <div class="row mb-3">
                 <div class="col-sm-10">
-                  <?php print(form_input($add_election)); ?>
+                  <?= form_input($add_election); ?>
                 </div>
               </div>
 

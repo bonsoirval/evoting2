@@ -33,6 +33,7 @@ class Validation extends BaseConfig
      *
      * @var array<string, string>
      */
+
     public array $templates = [
         'list'   => 'CodeIgniter\Validation\Views\list',
         'single' => 'CodeIgniter\Validation\Views\single',
@@ -41,6 +42,24 @@ class Validation extends BaseConfig
     // --------------------------------------------------------------------
     // Rules
     // --------------------------------------------------------------------
+
+    # Validation Rules
+     /**
+      * $this->form_validation->set_rules('query',
+            array('<style color:"red">Search Qery needed</style>'));
+            array('<style color:"red">Search Type</style>'));
+
+      */
+    public array $manage_election = [
+        'query' => 'required',
+        'search_type' => 'required'
+    ];
+
+    public array $add_election = [
+        'election' => 'required|is_unique[election.name]',
+        'election_date' => 'required',
+        'region' => 'required'
+    ];
 
     public array $update_party = [
         'name' => 'required|is_unique[party.name]',
@@ -53,6 +72,13 @@ class Validation extends BaseConfig
     public array $manage_party = [
         'query' => 'required',
         'search_type' => 'required'
+    ];
+
+    public array $add_election_errors = [
+        'election' => ['required' => 'Election name must be filled','is_unique'=>'Duplicate [double] election names are not allowed'],
+        'election_date' => ['required' => "Date for election must be provided"],
+        'region' => ['required' => 'Provide election region']
+        
     ];
 
     public array $update_party_errors = [
